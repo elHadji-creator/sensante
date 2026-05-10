@@ -52,6 +52,15 @@ def health_check():
     """Verification de l'etat de l'API."""
     return {"status": "ok", "message": "SenSante API is running"}
 
+@app.get("/model-info")
+def model_info():
+    """Informations sur le modele charge."""
+    return {
+        "type": type(model).__name__,
+        "nombre_arbres": model.n_estimators,
+        "classes": list(model.classes_),
+        "nombre_features": model.n_features_in_
+    }
 
 @app.post("/predict", response_model=DiagnosticOutput)
 def predict(patient: PatientInput):
@@ -106,7 +115,7 @@ def predict(patient: PatientInput):
     "typhoide":  "Suspicion de typhoide. Consultation medicale necessaire.",
     "sain":      "Pas de pathologie detectee. Continuez a surveiller."
     }
-    
+
     # 6. Retourner le resultat
     return DiagnosticOutput(
         diagnostic=diagnostic,
