@@ -56,6 +56,7 @@ y_pred = model.predict(X_test)
 
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Accuracy : {accuracy:.2%}")
+
 import joblib
 import os
 
@@ -64,6 +65,28 @@ os.makedirs("models", exist_ok=True)
 joblib.dump(model, "models/model.pkl")
 
 print("Modele sauvegarde dans models/model.pkl")
+
+from sklearn.metrics import confusion_matrix, classification_report
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+cm = confusion_matrix(y_test, y_pred)
+
+print("Matrice de confusion :")
+print(cm)
+
+print("\nRapport de classification :")
+print(classification_report(y_test, y_pred))
+
+plt.figure(figsize=(8,6))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+            xticklabels=model.classes_,
+            yticklabels=model.classes_)
+plt.xlabel("Prédiction")
+plt.ylabel("Réel")
+plt.title("Matrice de confusion")
+plt.savefig("figures/confusion_matrix.png")
+plt.show()
 
 # === TEST DU MODELE SERIALISE ===
 model_loaded = joblib.load("models/model.pkl")
